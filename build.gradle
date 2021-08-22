@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 group 'com.hyosakura'
@@ -13,7 +14,7 @@ repositories {
 dependencies {
     implementation 'org.apache.logging.log4j:log4j-api:2.14.1'
     implementation 'org.apache.logging.log4j:log4j-core:2.14.1'
-    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'org.slf4j:slf4j-api:1.7.32'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.12.4'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.12.4'
 }
@@ -24,6 +25,13 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
     implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.14.1'
+    implementation 'info.picocli:picocli:4.6.1'
+}
+
+shadowJar {
+    manifest {
+        attributes("Main-Class": "com.hyosakura.cleaner.Main")
+    }
 }
 
 test {
