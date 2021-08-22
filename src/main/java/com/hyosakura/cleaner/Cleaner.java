@@ -2,7 +2,6 @@ package com.hyosakura.cleaner;
 
 import com.hyosakura.cleaner.strategy.CleanStrategy;
 import com.hyosakura.cleaner.struct.Dependency;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -12,7 +11,6 @@ import java.util.*;
 /**
  * @author LovesAsuna
  **/
-@Slf4j
 public class Cleaner {
     private final String gradleHome;
 
