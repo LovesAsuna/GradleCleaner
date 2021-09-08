@@ -54,6 +54,7 @@ public class Cleaner {
                         String currentName = relativizePath.getParent().getFileName().toString();
                         String currentGroup = relativizePath.getParent().getParent().getFileName().toString();
                         String version = relativizePath.getFileName().toString();
+                        path = dir.getParent();
                         // group不等或者name不等,即为扫描到一个新的依赖
                         if (!currentGroup.equals(group) || !currentName.equals(name)) {
                             // 添加当前轮次扫描到的版本并加入版本集合
@@ -62,7 +63,6 @@ public class Cleaner {
                             dependencies.add(dependency);
                             group = currentGroup;
                             name = currentName;
-                            path = dir.getParent();
                             return FileVisitResult.CONTINUE;
                         } else {
                             // group和name相等，即同一个依赖的其他版本
