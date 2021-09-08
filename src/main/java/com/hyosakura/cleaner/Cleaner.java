@@ -6,7 +6,9 @@ import com.hyosakura.cleaner.struct.Dependency;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author LovesAsuna
@@ -41,8 +43,8 @@ public class Cleaner {
             Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
                 private String group;
                 private String name;
-                private Set<String> versions;
                 private Path path;
+                private Dependency dependency;
 
                 @Override
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
@@ -52,19 +54,19 @@ public class Cleaner {
                         String currentName = relativizePath.getParent().getFileName().toString();
                         String currentGroup = relativizePath.getParent().getParent().getFileName().toString();
                         String version = relativizePath.getFileName().toString();
-                        if (!currentGroup.equals(group) ||!currentName.equals(name)) {
-                            if (versions == null) {
-                                versions = new HashSet<>();
-                                versions.add(version);
-                            } else {
-                                Dependency dependency = new Dependency(group, name, path, versions);
-                                dependencies.add(dependency);
-                                versions = null;
-                            }
+                        // group不等或者name不等,即为扫描到一个新的依赖
+                        if (!currentGroup.equals(group) || !currentName.equals(name)) {
+                            // 添加当前轮次扫描到的版本并加入版本集合
+                            dependency = new Dependency(currentGroup, currentName, path, new HashSet<>());
+                            dependency.getVersions().add(version);
+                            dependencies.add(dependency);
                             group = currentGroup;
                             name = currentName;
                             path = dir.getParent();
                             return FileVisitResult.CONTINUE;
+                        } else {
+                            // group和name相等，即同一个依赖的其他版本
+                            dependency.getVersions().add(version);
                         }
                     }
                     return FileVisitResult.CONTINUE;
